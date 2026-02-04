@@ -6,7 +6,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url('../assets/beaa776788318ffa9adf475282e18bb5.gif') no-repeat center center / cover;
+    background: url('../assets/beaa776788318ffa9adf475282e18bb5.gif') no-repeat center center;
+    background-size: cover;
     overflow: hidden;
     color: #fff;
 }
@@ -22,7 +23,14 @@ body {
     backdrop-filter: blur(5px);
 }
 
-/* Inputs & buttons neon effect */
+/* Neon glow animation */
+@keyframes neonGlow {
+    0% { box-shadow: 0 0 20px #00f6ff, 0 0 40px #00f6ff, 0 0 60px #00f6ff; }
+    50% { box-shadow: 0 0 30px #ff00ff, 0 0 60px #ff00ff, 0 0 90px #ff00ff; }
+    100% { box-shadow: 0 0 20px #00f6ff, 0 0 40px #00f6ff, 0 0 60px #00f6ff; }
+}
+
+/* Inputs & buttons */
 input, button {
     padding: 12px 15px;
     margin: 10px 5px;
@@ -46,7 +54,6 @@ button {
     color: #000;
     font-weight: bold;
     cursor: pointer;
-    text-shadow: none;
 }
 
 button:hover {
@@ -62,19 +69,12 @@ button:hover {
     animation: fadeIn 1s;
 }
 
-/* Neon glowing animation */
-@keyframes neonGlow {
-    0% { box-shadow: 0 0 20px #00f6ff, 0 0 40px #00f6ff, 0 0 60px #00f6ff; }
-    50% { box-shadow: 0 0 30px #ff00ff, 0 0 60px #ff00ff, 0 0 90px #ff00ff; }
-    100% { box-shadow: 0 0 20px #00f6ff, 0 0 40px #00f6ff, 0 0 60px #00f6ff; }
-}
-
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
 }
 
-/* Neon heading effect */
+/* Neon heading */
 h1 {
     font-size: 32px;
     color: #00f6ff;
