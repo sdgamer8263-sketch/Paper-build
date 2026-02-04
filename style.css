@@ -5,7 +5,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url('../assets/beaa776788318ffa9adf475282e18bb5.gif');
+    background-image: url('beaa776788318ffa9adf475282e18bb5.gif');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
