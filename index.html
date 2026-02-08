@@ -3,210 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SKA HOSTING TOOLS</title>
-
-<link href="https://fonts.cdnfonts.com/css/minecraft-4" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-
+<title>Paper Build Finder</title>
 <style>
-*{box-sizing:border-box;font-family:'Minecraft',sans-serif}
-body{
-  margin:0;
-  min-height:100vh;
-  background:
-   linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.75)),
-   url("fx58j1opheu71.gif") center/cover fixed;
-  color:#0ff;
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,.75)),
+                url("https://raw.githubusercontent.com/sdgamer8263-sketch/Paper-build/main/beaa776788318ffa9adf475282e18bb5.gif") center/cover no-repeat fixed;
+    color: #fff;
 }
 
-.hidden{display:none}
-
-/* Header */
-header{
-  display:flex;
-  align-items:center;
-  padding:15px;
-}
-header img{
-  width:55px;
-  animation:spin 30s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-header h1{margin-left:12px}
-
-/* Buttons */
-button{
-  padding:12px;
-  margin:8px 0;
-  width:100%;
-  border-radius:12px;
-  border:none;
-  background:#0ff;
-  color:#000;
-  font-weight:bold;
-  cursor:pointer;
-}
-button:active{transform:scale(.96)}
-
-.card{
-  width:95%;
-  max-width:500px;
-  padding:20px;
-  margin:20px auto;
-  background:rgba(0,0,0,.45);
-  backdrop-filter:blur(15px);
-  border-radius:20px;
-  box-shadow:0 0 30px #0ff;
+.container {
+    background: rgba(0,0,0,0.6);
+    padding: 40px 50px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 0 20px #00f6ff, 0 0 40px #00f6ff, 0 0 60px #00f6ff;
+    animation: neonGlow 2s infinite alternate;
+    backdrop-filter: blur(5px);
 }
 
-.center{text-align:center}
-
-.back{
-  font-size:20px;
-  cursor:pointer;
-  margin-bottom:10px;
+@keyframes neonGlow {
+    0% { box-shadow: 0 0 20px #00f6ff, 0 0 40px #00f6ff, 0 0 60px #00f6ff; }
+    50% { box-shadow: 0 0 30px #ff00ff, 0 0 60px #ff00ff, 0 0 90px #ff00ff; }
+    100% { box-shadow: 0 0 20px #00f6ff, 0 0 40px #00f6ff, 0 0 60px #00f6ff; }
 }
-canvas{width:100%;height:150px}
-#map{height:200px;border-radius:12px;margin-top:10px}
+
+input, button {
+    padding: 12px 15px;
+    margin: 10px 5px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    transition: all 0.3s;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    text-shadow: 0 0 5px #00f6ff;
+    box-shadow: 0 0 5px #00f6ff;
+}
+
+input:focus { box-shadow: 0 0 10px #00f6ff; }
+
+button {
+    background: #00f6ff;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    text-shadow: none;
+}
+
+button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #00f6ff, 0 0 40px #00f6ff;
+}
+
+#result {
+    margin-top: 25px;
+    font-weight: bold;
+    font-size: 18px;
+    animation: fadeIn 1s;
+}
+
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+
+h1 {
+    font-size: 32px;
+    color: #00f6ff;
+    text-shadow: 0 0 5px #00f6ff, 0 0 10px #00f6ff, 0 0 20px #ff00ff;
+}
 </style>
 </head>
-
 <body>
 
-<header>
-  <img src="file_00000000387071faa7c92db633a8f726.png">
-  <h1>SKA HOSTING</h1>
-</header>
-
-<!-- HOME -->
-<div id="home" class="card center">
-  <h2>SERVER TOOLS</h2>
-  <button onclick="show('ping')">Server Ping</button>
-  <button onclick="show('status')">Server Status</button>
-  <button onclick="show('build')">Paper Build Number</button>
+<div class="container">
+    <h1>Paper Build Finder</h1>
+    <input type="text" id="version" placeholder="Enter Java version (e.g., 1.20.1)">
+    <button onclick="findBuild()">Find Build</button>
+    <div id="result"></div>
 </div>
-
-<!-- ================= PING PAGE ================= -->
-<div id="ping" class="card hidden">
-  <div class="back" onclick="show('home')">⬅ Back</div>
-
-  <h2 class="center">MC PING DASHBOARD</h2>
-
-  <input id="ip" placeholder="Server IP">
-  <input id="port" value="25565">
-  <select id="type">
-    <option value="java">Java</option>
-    <option value="bedrock">Bedrock</option>
-    <option value="geyser">Geyser</option>
-    <option value="other">Other</option>
-  </select>
-  <button onclick="checkPing()">Check Ping</button>
-
-  <div class="center" id="status">Ready</div>
-  <div class="center" id="ping"></div>
-  <div class="center" id="quality"></div>
-  <div class="center" id="minmax"></div>
-  <div class="center" id="timeinfo"></div>
-  <div class="center" id="location"></div>
-
-  <canvas id="graph"></canvas>
-  <div id="map"></div>
-</div>
-
-<!-- ================= SERVER STATUS ================= -->
-<div id="statusPage" class="card hidden">
-  <div class="back" onclick="show('home')">⬅ Back</div>
-
-  <h2 class="center">SERVER STATUS</h2>
-
-  <input id="serverIP" placeholder="Server IP">
-  <input id="serverPort" placeholder="Port">
-  <select id="serverType">
-    <option value="java">Java</option>
-    <option value="bedrock">Bedrock</option>
-    <option value="geyser">Geyser</option>
-  </select>
-
-  <div id="statusText" class="center">Enter details</div>
-  <button onclick="checkServer()">Check Server</button>
-</div>
-
-<!-- ================= BUILD ================= -->
-<div id="build" class="card hidden">
-  <div class="back" onclick="show('home')">⬅ Back</div>
-
-  <h2 class="center">PAPER BUILD FINDER</h2>
-  <input id="version" placeholder="Enter Java version">
-  <button onclick="findBuild()">Find Build</button>
-  <div id="result" class="center"></div>
-</div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-/* PAGE SWITCH */
-function show(id){
-  document.querySelectorAll(".card").forEach(c=>c.classList.add("hidden"));
-  if(id==="status") id="statusPage";
-  document.getElementById(id).classList.remove("hidden");
-}
+const buildMap = {
+    "1.21.11": 39, "1.21.10": 89, "1.21.9": 59, "1.21.8": 60, "1.21.7": 32,
+    "1.21.6": 48, "1.21.5": 114, "1.21.4": 232, "1.21.3": 83, "1.21.1": 133,
+    "1.21": 130, "1.20.6": 151, "1.20.5": 22, "1.20.4": 499, "1.20.2": 318,
+    "1.20.1": 196, "1.20": 17, "1.19.4": 550, "1.19.3": 448, "1.19.2": 307,
+    "1.19.1": 111, "1.19": 81, "1.18.2": 388, "1.18.1": 216, "1.18": 66,
+    "1.17.1": 411, "1.17": 79, "1.16.5": 794, "1.16.4": 416, "1.16.3": 253,
+    "1.16.2": 189, "1.16.1": 138, "1.15.2": 393, "1.15.1": 62, "1.15": 21,
+    "1.14.4": 245, "1.14.3": 134, "1.14.2": 107, "1.14.1": 50, "1.14": 17
+};
 
-/* ================= PING (UNCHANGED LOGIC) ================= */
-const API="https://ping-yies.onrender.com/ping";
-const canvas=document.getElementById("graph"),ctx=canvas.getContext("2d");
-let hist=[],minPing=null,maxPing=null,waking=false,marker=null;
-const map=L.map('map').setView([20,0],2);
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+function findBuild() {
+    const version = document.getElementById('version').value.trim();
+    const resultDiv = document.getElementById('result');
 
-function checkPing(){
- const ipV=ip.value.trim();
- const portV=port.value.trim()||"25565";
- const typeV=type.value;
- if(!ipV){set("Enter server IP ❌");return}
- fetch(`${API}?ip=${ipV}&port=${portV}&type=${typeV}`)
- .then(r=>r.json()).then(d=>{
-   if(!d.online){set("Server Offline ❌");return}
-   const p=d.ping;
-   minPing=minPing===null?p:Math.min(minPing,p);
-   maxPing=maxPing===null?p:Math.max(maxPing,p);
-   ping.innerText=`Ping: ${p} ms`;
-   minmax.innerText=`Min: ${minPing} | Max: ${maxPing}`;
-   hist.push(p);if(hist.length>20)hist.shift();
-   drawGraph();
-   set("Server Online ✅");
- });
-}
-function drawGraph(){
- canvas.width=canvas.offsetWidth;ctx.clearRect(0,0,canvas.width,150);
- ctx.beginPath();ctx.strokeStyle="#0ff";
- hist.forEach((p,i)=>{
-  const x=i*(canvas.width/(hist.length-1||1));
-  const y=150-(p/400*150);
-  i?ctx.lineTo(x,y):ctx.moveTo(x,y);
- });
- ctx.stroke();
-}
-function set(s){status.innerText=s}
+    if (!version) {
+        resultDiv.textContent = "Please enter a version!";
+        return;
+    }
 
-/* ================= SERVER STATUS (UNCHANGED LOGIC) ================= */
-async function checkServer(){
- const ip=serverIP.value.trim();
- const port=serverPort.value.trim();
- const type=serverType.value;
- if(!ip){statusText.innerText="Enter IP";return}
- let serverString=port?`${ip}:${port}`:ip;
- let url= type==="bedrock"
- ?`https://api.mcsrvstat.us/bedrock/2/${serverString}`
- :`https://api.mcsrvstat.us/2/${serverString}`;
- const d=await fetch(url).then(r=>r.json());
- statusText.innerText=d.online?"Online ✅":"Offline ❌";
-}
-
-/* ================= BUILD (UNCHANGED LOGIC) ================= */
-const buildMap={"1.20.4":499,"1.19.4":550,"1.18.2":388,"1.16.5":794};
-function findBuild(){
- const v=version.value.trim();
- result.innerText=buildMap[v]?`Build #${buildMap[v]}`:"Not Found";
+    if (buildMap[version]) {
+        const buildNumber = buildMap[version];
+        resultDiv.textContent = `Paper Build for ${version}: Build #${buildNumber}`;
+    } else {
+        resultDiv.textContent = `No build found for version ${version}`;
+    }
 }
 </script>
 
